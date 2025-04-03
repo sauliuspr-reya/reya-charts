@@ -2,36 +2,32 @@
 
 import { useState } from 'react';
 
-interface TimeframeSelectorProps {
-  currentResolution: string;
-  onResolutionChange: (resolution: string) => void;
+export type NetworkType = 'mainnet' | 'cronos' | 'testnet';
+
+interface NetworkSelectorProps {
+  currentNetwork: NetworkType;
+  onNetworkChange: (network: NetworkType) => void;
 }
 
-const TimeframeSelector = ({ currentResolution, onResolutionChange }: TimeframeSelectorProps) => {
+const NetworkSelector = ({ currentNetwork, onNetworkChange }: NetworkSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Available timeframes
-  const timeframes = [
-    { value: '1', label: '1m' },
-    { value: '5', label: '5m' },
-    { value: '15', label: '15m' },
-    { value: '30', label: '30m' },
-    { value: '60', label: '1h' },
-    { value: '240', label: '4h' },
-    { value: '1D', label: '1d' },
-    { value: '1W', label: '1w' },
+  const networks = [
+    { id: 'mainnet', name: 'Mainnet' },
+    { id: 'cronos', name: 'Cronos' },
+    { id: 'testnet', name: 'Testnet' },
   ];
 
   return (
     <div className="relative">
       <div className="flex flex-col">
-        <label className="text-sm font-medium mb-1">Timeframe</label>
+        <label className="text-sm font-medium mb-1">Network</label>
         <button
           type="button"
           className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md px-4 py-2 text-left flex justify-between items-center w-full md:w-48"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span>{timeframes.find(t => t.value === currentResolution)?.label || currentResolution}</span>
+          <span>{networks.find(n => n.id === currentNetwork)?.name || currentNetwork}</span>
           <svg
             className={`w-5 h-5 transition-transform ${isOpen ? 'transform rotate-180' : ''}`}
             xmlns="http://www.w3.org/2000/svg"
@@ -49,18 +45,18 @@ const TimeframeSelector = ({ currentResolution, onResolutionChange }: TimeframeS
 
       {isOpen && (
         <div className="absolute z-10 mt-1 w-full md:w-48 bg-white dark:bg-gray-700 shadow-lg rounded-md py-1 max-h-60 overflow-auto">
-          {timeframes.map((timeframe) => (
+          {networks.map((network) => (
             <button
-              key={timeframe.value}
+              key={network.id}
               className={`w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 ${
-                currentResolution === timeframe.value ? 'bg-gray-100 dark:bg-gray-600' : ''
+                currentNetwork === network.id ? 'bg-gray-100 dark:bg-gray-600' : ''
               }`}
               onClick={() => {
-                onResolutionChange(timeframe.value);
+                onNetworkChange(network.id as NetworkType);
                 setIsOpen(false);
               }}
             >
-              {timeframe.label}
+              {network.name}
             </button>
           ))}
         </div>
@@ -69,4 +65,4 @@ const TimeframeSelector = ({ currentResolution, onResolutionChange }: TimeframeS
   );
 };
 
-export default TimeframeSelector;
+export default NetworkSelector;
